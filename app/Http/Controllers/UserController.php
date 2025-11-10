@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Resources\CreateUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use OpenApi\Annotations as OA;
 
 /**
  * @OA\Info(
@@ -32,7 +33,20 @@ use OpenApi\Annotations as OA;
  *     securityScheme="bearerAuth",
  *     type="http",
  *     scheme="bearer",
- *     bearerFormat="JWT",
+ *     bearerFormat="JWT"
+ * )
+ *
+ * @OA\Schema(
+ *     schema="User",
+ *     type="object",
+ *
+ *     @OA\Property(property="id", type="integer", format="int64", example=1),
+ *     @OA\Property(property="name", type="string", example="John Doe"),
+ *     @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+ *     @OA\Property(property="role", type="string", enum={"admin","manager","user"}, example="user"),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="orders_count", type="integer", example=5),
+ *     @OA\Property(property="can_edit", type="boolean", example=true)
  * )
  */
 class UserController extends Controller
@@ -41,7 +55,87 @@ class UserController extends Controller
 
     public function __construct(
         private readonly UserService $userService
-    ) {}
+    ) {
+        $this->middleware('auth:sanctum')->only(['index']);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/users",
+     *     summary="List users with pagination and filtering",
+     *     tags={"Users"},
+     *     security={{"bearerAuth": {}}},
+     *
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Search term for name or email",
+     *         required=false,
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *
+     *         @OA\Schema(type="integer", default=1, minimum=1)
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="sortBy",
+     *         in="query",
+     *         description="Field to sort by",
+     *         required=false,
+     *
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"name", "email", "created_at"},
+     *             default="created_at"
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of users",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="page", type="integer", example=1),
+     *             @OA\Property(
+     *                 property="users",
+     *                 type="array",
+     *
+     *                 @OA\Items(ref="#/components/schemas/User")
+     *             )
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden"
+     *     )
+     * )
+     */
+    public function index(Request $request)
+    {
+        $users = $this->userService->getPaginatedUsers([
+            'search' => $request->input('search'),
+            'sortBy' => $request->input('sortBy', 'created_at'),
+            'page' => $request->input('page', 1),
+        ]);
+
+        return response()->json([
+            'page' => $users->currentPage(),
+            'users' => UserResource::collection($users->items()),
+        ]);
+    }
 
     /**
      * @OA\Post(
@@ -112,8 +206,9 @@ class UserController extends Controller
 
         $user = $this->userService->createUser($userData);
 
-        return (new UserResource($user))
-            ->response()
-            ->setStatusCode(Response::HTTP_CREATED);
+        return response()->json(
+            new CreateUserResource($user),
+            Response::HTTP_CREATED
+        );
     }
 }

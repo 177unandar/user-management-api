@@ -31,20 +31,14 @@ class CreateUserApiTest extends TestCase
 
         $response->assertStatus(201)
             ->assertJsonStructure([
-                'data' => [
-                    'id',
-                    'name',
-                    'email',
-                    'role',
-                    'created_at',
-                ],
+                'id',
+                'email',
+                'name',
+                'created_at',
             ])
             ->assertJson([
-                'data' => [
-                    'name' => $userData['name'],
-                    'email' => $userData['email'],
-                    'role' => UserRole::USER->value,
-                ],
+                'name' => $userData['name'],
+                'email' => $userData['email'],
             ]);
 
         $this->assertDatabaseHas('users', [
