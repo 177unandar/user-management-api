@@ -19,10 +19,9 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => (string) Str::uuid(),
             'user_id' => User::factory(),
             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => fn (array $attributes) => $attributes['created_at'],
+            'updated_at' => fn(array $attributes) => $attributes['created_at'],
             'deleted_at' => null,
         ];
     }
@@ -32,7 +31,7 @@ class OrderFactory extends Factory
      */
     public function forUser(User $user): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'user_id' => $user->id,
         ]);
     }
@@ -42,7 +41,7 @@ class OrderFactory extends Factory
      */
     public function deleted(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'deleted_at' => $this->faker->dateTimeBetween(
                 $attributes['created_at'],
                 'now'

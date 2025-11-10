@@ -16,7 +16,6 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => (string) Str::uuid(),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
@@ -59,7 +58,7 @@ class UserFactory extends Factory
     }
 
     /**
-     * Set the user's active status.
+     * Set the user as inactive.
      */
     public function inactive(): static
     {
@@ -69,7 +68,7 @@ class UserFactory extends Factory
     }
 
     /**
-     * Set the user as deleted.
+     * Set the user as soft deleted.
      */
     public function deleted(): static
     {

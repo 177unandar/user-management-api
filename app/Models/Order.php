@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,21 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
-
-    /**
-     * Indicates if the model's ID is auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
-     * The data type of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'string';
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
