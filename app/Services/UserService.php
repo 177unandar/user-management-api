@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Enums\UserRole;
 use App\Jobs\SendAdminNewUserNotification;
-use App\Jobs\SendUserCreatedNotification;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -61,19 +60,11 @@ class UserService
                 'password' => Hash::make($data['password']),
                 'role' => $data['role'] ?? UserRole::USER->value,
             ]);
-
-            $this->dispatchNotifications($user, $data['password']);
+            // Send email verification notification
+            $user->sendEmailVerificationNotification();
+            SendAdminNewUserNotification::dispatch($user);
 
             return $user;
         });
-    }
-
-    /**
-     * Dispatch notification jobs.
-     */
-    protected function dispatchNotifications(User $user, string $plainPassword): void
-    {
-        SendUserCreatedNotification::dispatch($user, $plainPassword);
-        SendAdminNewUserNotification::dispatch($user);
     }
 }

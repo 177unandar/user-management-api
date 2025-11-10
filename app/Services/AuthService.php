@@ -23,6 +23,12 @@ class AuthService
             ]);
         }
 
+        if (! $user->hasVerifiedEmail()) {
+            throw ValidationException::withMessages([
+                'email' => 'Please verify your email address before logging in.',
+            ]);
+        }
+
         $token = $user->createToken($deviceName)->plainTextToken;
 
         return [

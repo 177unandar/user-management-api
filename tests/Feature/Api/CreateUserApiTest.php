@@ -4,7 +4,6 @@ namespace Tests\Feature\Api;
 
 use App\Enums\UserRole;
 use App\Jobs\SendAdminNewUserNotification;
-use App\Jobs\SendUserCreatedNotification;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
@@ -47,7 +46,6 @@ class CreateUserApiTest extends TestCase
             'role' => UserRole::USER->value,
         ]);
 
-        Queue::assertPushed(SendUserCreatedNotification::class);
         Queue::assertPushed(SendAdminNewUserNotification::class);
     }
 

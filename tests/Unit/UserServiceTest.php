@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use App\Enums\UserRole;
 use App\Jobs\SendAdminNewUserNotification;
-use App\Jobs\SendUserCreatedNotification;
 use App\Services\UserService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -50,7 +49,6 @@ class UserServiceTest extends TestCase
         $this->assertTrue(Hash::check($this->userData['password'], $user->password));
 
         // Assert the jobs were dispatched
-        Queue::assertPushed(SendUserCreatedNotification::class);
         Queue::assertPushed(SendAdminNewUserNotification::class);
     }
 
