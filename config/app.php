@@ -123,4 +123,8 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+     * Admin emails
+     */
+    'admin_emails' => explode(',', env('ADMIN_EMAILS', 'admin@example.com')),
 ];
