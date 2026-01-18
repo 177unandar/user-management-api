@@ -3,14 +3,16 @@
 namespace App\Services;
 
 use App\Enums\UserRole;
-use App\Jobs\SendAdminNewUserNotification;
 use App\Models\User;
+use App\Notifications\SendAdminNewUserNotification;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
+    private const ALLOWED_SORT_FIELDS = ['name', 'email', 'created_at'];
+
     /**
      * Get paginated users with search and sort
      */
@@ -19,7 +21,7 @@ class UserService
         $query = User::query()->active()->withCount('orders');
 
         // Apply search filter if provided
-        if (! empty($filters['search'])) {
+        if (!empty($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -28,11 +30,15 @@ class UserService
         }
 
         // Apply sorting
-        $sortBy = $filters['sortBy'] ?? 'created_at';
-        $sortDirection = str_starts_with($sortBy, '-') ? 'desc' : 'asc';
-        $sortBy = ltrim($sortBy, '-');
 
-        $query->orderBy($sortBy, $sortDirection);
+        $sortBy = $filters['sortBy'] ?? 'created_at';
+
+        // Validate sort field
+        if (!in_array($sortBy, self::ALLOWED_SORT_FIELDS)) {
+            $sortBy = 'created_at'; // Default to created_at if invalid
+        }
+
+        $query->orderBy($sortBy);
 
         // Get paginated results
         $perPage = min(100, $filters['per_page'] ?? $perPage); // Prevent too large page sizes

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Notifications;
 
 use App\Mail\AdminUserNotification;
 use App\Models\User;
@@ -15,7 +15,9 @@ class SendAdminNewUserNotification implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public User $user) {}
+    public function __construct(public User $user)
+    {
+    }
 
     public function handle(): void
     {

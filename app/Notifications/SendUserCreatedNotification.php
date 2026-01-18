@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Notifications;
 
 use App\Mail\UserCreatedNotification;
 use App\Models\User;
@@ -16,9 +16,11 @@ class SendUserCreatedNotification implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        public User $user,
+        public User   $user,
         public string $password
-    ) {}
+    )
+    {
+    }
 
     public function handle(): void
     {
