@@ -257,10 +257,6 @@
                                                 "created_at": {
                                                     "type": "string",
                                                     "format": "date-time"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
                                                 }
                                             },
                                             "type": "object"
@@ -283,22 +279,6 @@
                                         },
                                         "errors": {
                                             "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated"
                                         }
                                     },
                                     "type": "object"

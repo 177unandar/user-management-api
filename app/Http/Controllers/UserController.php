@@ -55,7 +55,8 @@ class UserController extends Controller
 
     public function __construct(
         private readonly UserService $userService
-    ) {
+    )
+    {
         $this->middleware('auth:sanctum')->only(['index']);
     }
 
@@ -168,7 +169,6 @@ class UserController extends Controller
      *                 @OA\Property(property="name", type="string", example="John Doe"),
      *                 @OA\Property(property="email", type="string", format="email", example="user@example.com"),
      *                 @OA\Property(property="created_at", type="string", format="date-time"),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time")
      *             )
      *         )
      *     ),
@@ -181,16 +181,6 @@ class UserController extends Controller
      *
      *             @OA\Property(property="message", type="string", example="The given data was invalid."),
      *             @OA\Property(property="errors", type="object")
-     *         )
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthenticated",
-     *
-     *         @OA\JsonContent(
-     *
-     *             @OA\Property(property="message", type="string", example="Unauthenticated")
      *         )
      *     )
      * )
