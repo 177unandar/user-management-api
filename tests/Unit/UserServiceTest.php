@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Enums\UserRole;
-use App\Jobs\SendAdminNewUserNotification;
+use App\Notifications\SendAdminNewUserNotification;
 use App\Services\UserService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;

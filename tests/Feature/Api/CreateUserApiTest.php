@@ -3,8 +3,8 @@
 namespace Tests\Feature\Api;
 
 use App\Enums\UserRole;
-use App\Jobs\SendAdminNewUserNotification;
 use App\Models\User;
+use App\Notifications\SendAdminNewUserNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
